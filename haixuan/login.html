@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>海草公社————海选后台</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div id="login">
+         <div class="cover">
+         </div>
+         <!-- 登陆框 -->
+         <div class="login-form">
+
+         </div>
+         <div class="logo">
+             <h1>海草公社--海选后台</h1>
+             <div class="forms">
+                 <h3 class="login-head">登陆</h3>
+                 <div class="forms-group">
+                        <p>手机号</p>
+                        <input class="form-controls userPhone" type="number" placeholder="请输入手机号！" autofocus>
+                        <p class="text-error text-error-phe"></p>
+                 </div>
+                 <div class="forms-group">
+                        <p>密码</p>
+                        <input class="form-controls getPassWord" type="password" placeholder="请输入密码！" autofocus>
+                        <p class="text-error text-error-pas"></p>
+                 </div>
+                 <div class="forms-group">
+                       <button style="background: #009688" class="forms-btn">登陆</button>
+                 </div>
+             </div>
+            
+         </div>
+    </div>
+</body>
+<script src="./js/jquery-3.2.1.min.js"></script>
+<script>
+$(function(){
+    $('.forms-btn').click(function(){
+       let isPhoneError =  getPhone();
+       let isPassWord = getPassWord();
+       if(!isPhoneError){
+        $('.userPhone').addClass('input-error')
+       }else{
+        $('.userPhone').removeClass('input-error')  
+       }
+       if(!isPassWord){
+        $('.getPassWord').addClass('input-error')
+       }else{
+        $('.getPassWord').removeClass('input-error')   
+       }
+       if(isPassWord && isPhoneError){
+        login()
+       }
+    });
+    // 校验手机号码
+    function getPhone(){
+        let phe = $('.userPhone').val();
+        if(phe == ''){
+            $('.text-error-phe').html('手机号码不能为空！')
+            return false
+        }else{
+            var myreg = /^[1][0-9]{10}$/;
+            if (myreg.test(phe)){
+                $('.text-error-phe').html('')
+                return true
+            }else{
+                $('.text-error-phe').html('请输入正确的手机号码！')
+                return false
+            }
+        }
+    }
+    // 校验密码
+    function getPassWord(){
+        let pas = $('.getPassWord').val();
+        if(pas == ''){
+         $('.text-error-pas').html('密码不能为空！')
+          return false
+        }else{
+        let anthereg = /^[a-zA-Z\d_]{6,12}$/
+        if (anthereg.test(pas)){
+                $('.text-error-pas').html('');
+                return true
+            }else{
+                $('.text-error-pas').html('密码长度为6-12位，只能包含a-z,A-Z,数字,_,')
+                return false
+            }  
+        }
+    }
+    // 数据请求
+     function login() {
+         let phone = $('.userPhone').val();  //手机号码
+         let password = $('.getPassWord').val();  //账号密码
+        $.ajax({
+             type: "POST",
+             url: "/login",
+             contentType: 'application/x-www-form-urlencoded;charset=utf-8',
+             data: {phone,password},
+             dataType: "json",
+             success: function(data){
+                         console.log(data);
+                      },
+             error:function(e){
+                         console.log(e);
+             }
+         })
+     }
+})
+</script>
+</html>
